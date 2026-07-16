@@ -162,6 +162,41 @@ Create a `variables.json` file in the project root to configure AWS settings:
 - **Scalable**: From local development to production deployment
 - **AWS Integration**: Native integration with Bedrock, DynamoDB, CloudWatch, and more
 
+## Managed Knowledge Bases
+
+The Knowledge Base examples in this cookbook support both **Managed Knowledge Bases** (recommended) and traditional vector search KBs.
+
+### managed_kb_retrieval_example.py
+
+A dedicated example demonstrating managed knowledge base retrieval with the Strands SDK:
+
+```python
+import os
+os.environ["KNOWLEDGE_BASE_ID"] = "ABCDEFGHIJ"
+os.environ["KNOWLEDGE_BASE_TYPE"] = "MANAGED"
+
+from strands import Agent
+from strands_tools import retrieve
+
+agent = Agent(tools=[retrieve])
+response = agent("Summarize the key findings from our research documents")
+```
+
+Managed KBs:
+- Eliminate the need for an external vector store (Bedrock handles embedding, storage, and retrieval)
+- Support agentic retrieval with intelligent query decomposition and managed reranking
+- Use `managedSearchConfiguration` instead of `vectorSearchConfiguration`
+
+Set environment variables to configure behavior:
+```bash
+export KNOWLEDGE_BASE_ID="your-managed-kb-id"
+export KNOWLEDGE_BASE_TYPE="MANAGED"
+export USE_AGENTIC_RETRIEVAL="true"   # Enable agentic retrieval (default)
+export GENERATE_RESPONSE="false"      # Disable response generation (default)
+```
+
+> **SDK requirements:** `boto3 >= 1.43` for managed search and agentic retrieval.
+
 ## Resources
 
 - [Strands Agents Official Documentation](https://docs.strands.ai)
